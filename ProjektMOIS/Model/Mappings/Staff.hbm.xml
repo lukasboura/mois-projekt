@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ProjektMOIS"
+                   namespace="ProjektMOIS.Model">
+
+  <class name="Staff" table="staff">
+    <id name="Id">
+      <generator class="native"></generator>
+    </id>
+    <property name="Name" />
+    <property name="Surname" />
+    <property name="BirthDate" />
+    <property name="Country" />
+    <property name="Photo" />
+    <set name="Teams"
+        cascade="all"
+        inverse="true"
+        lazy="false">
+      <key column="Staff"></key>
+      <one-to-many class="TeamStaff"/>
+    </set>
+  </class>
+
+</hibernate-mapping>

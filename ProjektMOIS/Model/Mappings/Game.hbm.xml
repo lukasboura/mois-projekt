@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ProjektMOIS"
+                   namespace="ProjektMOIS.Model">
+
+  <class name="Game" table="game">
+    <id name="Id">
+      <generator class="native"></generator>
+    </id>
+    <property name="Date" />
+    <property name="Place" />
+    <property name="Opponent" /> 
+    <property name="Report" />
+    <property name="ReportMarkdown" />
+    <many-to-one name="Team" column="Team" class="ProjektMOIS.Model.Team" lazy="false"/>
+    <many-to-one name="Season" column="Season" class="ProjektMOIS.Model.Season" lazy="false" />
+    <many-to-one name="Competition" column="Competition" class="ProjektMOIS.Model.Competition" lazy="false" />
+    <set name="Stats"
+         cascade="all-delete-orphan"
+         inverse="true"
+         lazy="false">
+      <key column="Game"></key>
+      <one-to-many class="GameStats"/>
+    </set>
+    <set name="PlayerStats"
+         cascade="all-delete-orphan"
+         inverse="true"
+         lazy="false">
+      <key column="Game"></key>
+      <one-to-many class="PlayerStats"/>
+    </set>
+  </class>
+
+</hibernate-mapping>

@@ -1,0 +1,89 @@
+﻿@model ProjektMOIS.Model.GameFilterViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Zápasy";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Game">Vyhledat zápas</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a href="/Game/Create">Vytvořit</a></li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @using (Html.BeginForm("Index", "Game", FormMethod.Get, new { role = "form", @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    <label for="inputTeam" class="control-label">Tým: </label>
+                    @Html.DropDownListFor(model => model.Team, (IEnumerable<SelectListItem>)ViewBag.TeamItems, new { @class = "form-control", id = "inputTym", onchange = "this.form.submit();" })
+                </div>
+                <div class="form-group">
+                    <label for="inputSeason" class="control-label">Sezóna: </label>
+                    @Html.DropDownListFor(model => model.Season, (IEnumerable<SelectListItem>)ViewBag.SeasonItems, new { @class = "form-control", id = "inputSeason", onchange = "this.form.submit();" })
+                </div>
+                <div class="form-group">
+                    <label for="inputC" class="control-label">Soutěž: </label>
+                    @Html.DropDownListFor(model => model.Competition, (IEnumerable<SelectListItem>)ViewBag.CompetitionItems, new { @class = "form-control", id = "inputC", onchange = "this.form.submit();" })
+                </div>
+@*<div class="form-group">
+                    <button type="submit" class="btn btn-success">Zobrazit</button>
+                </div>*@
+            }
+            <hr>
+            @if (@ViewBag.Games == null || @ViewBag.Games.Count == 0)
+            {
+                <div class="alert alert-info">Nebyly nalezeny žádné zápasy.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Hráno</th>
+                            <th>Soupeř</th>
+                            <th>Datum</th>
+                            <th>Výsledek</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var g in ViewBag.Games)
+                        { 
+                            <tr>
+                                <td>@g.Place</td>
+                                <td>@g.Opponent</td>
+                                <td>@String.Format("{0:d/M/yyyy HH:mm}", @g.Date)</td>
+                                @if (@g.Date <= DateTime.Now && @g.Stats.Count >= 2)
+                                {
+                                    <td>@g.Result()</td>
+                                }
+                                else
+                                {
+                                    <td>-- : --</td>
+                                }
+                                <td>
+                                    <a href="/Game/Details/@g.Id" class="btn btn-success btn-xs" style="margin-right: 5px;">Podrobnosti</a>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a href="/Game/Edit/@g.Id" class="btn btn-primary btn-xs">Upravit</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Týmy";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Team">Seznam týmů</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a href="/Team/Create">Nový tým</a></li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @if (@ViewBag.Teams == null || @ViewBag.Teams.Count == 0)
+            {
+                <div class="alert alert-info">Nemáte vytvořené žádné týmy.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Název</th>
+                            <th>Počet hráčů</th>
+                            <th>Realizační tým</th>
+                            <th>Hrané soutěže</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in ViewBag.Teams)
+                        { 
+                            <tr>
+                                <td>@t.Name</td>
+                                <td>@t.Players.Count</td>
+                                <td>@t.Staffs.Count</td>
+                                <td>@t.Competitions.Count</td>
+                                <td>
+                                    <a href="/Team/Details/@t.Id" class="btn btn-success btn-xs" style="margin-right: 5px;">Podrobnosti</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a href="/Team/Edit/@t.Id" class="btn btn-primary btn-xs">Upravit</a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+

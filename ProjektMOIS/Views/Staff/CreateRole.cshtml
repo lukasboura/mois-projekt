@@ -1,0 +1,49 @@
+﻿@model ProjektMOIS.Model.ViewModels.StaffRoleViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Přidat roli";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="/Staff/Details/@Model.Staff">@ViewBag.Staff.Name @ViewBag.Staff.Surname</a></li>
+                <li><a href="/Staff/Edit/@Model.Staff">Upravit</a></li>
+                <li><a href="/Staff/EditRoles/@Model.Staff">Upravit role</a></li>
+                <li class="active"><a href="/Staff/CreateRole/@Model.Staff">Přidat roli</a></li>
+                <li><a href="/Staff">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Upravte informace o členu realizačního týmu.</div>
+            @using (Html.BeginForm("CreateRole", "Staff", new { id = ViewBag.Staff.Id }, FormMethod.Post, new { role = "form", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            { 
+                @Html.HiddenFor(model => model.Staff)
+                <div class="form-group">
+                    <label for="inputCountry" class="col-sm-2 control-label">Tým</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Team, (IEnumerable<SelectListItem>)ViewBag.Teams, "-- Vyberte tým --", new { @class = "form-control", id="inputCountry" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputRole" class="col-sm-2 control-label">Role</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.Role, new { @class = "form-control", id="inputRole", placeholder = "Role" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6">
+                        <button type="submit" class="btn btn-primary">Přidat</button>
+                    </div>
+                </div>
+                if (!ViewData.ModelState.IsValid)
+                {
+                    @Html.ValidationSummary("", new { @class = "alert alert-danger col-md-6 col-md-offset-2" })
+                }
+            }
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,166 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = ViewBag.Team.Name;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Team/Details/@ViewBag.Team.Id">@ViewBag.Team.Name</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a href="/Team/Edit/@ViewBag.Team.Id">Upravit</a></li>
+                }
+                <li><a href="/Team">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <h3>Hráči <span class="label label-info">@ViewBag.Team.Players.Count</span></h3>
+            <hr />
+            @if (@ViewBag.Team.Players == null || @ViewBag.Team.Players.Count == 0)
+            {
+                <div class="alert alert-info">V týmu nejsou žádní hráči.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jméno</th>
+                            <th>Příjmení</th>
+                            <th>Post</th>
+                            <th>Datum narození</th>
+                            <th>Číslo dresu</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var h in ViewBag.Team.Players)
+                        { 
+                            <tr>
+                                <td><span class="flag flag-@h.Country" alt="@h.CountryName"></span></td>
+                                <td>@h.Name</td>
+                                <td>@h.Surname</td>
+                                <td>@h.Position</td>
+                                <td>@h.BirthDate.ToShortDateString()</td>
+                                <td>@h.Number</td>
+                                <td><a href="/Player/Details/@h.Id" class="btn btn-success btn-xs">Podrobnosti</a></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <h3>Realizační tým <span class="label label-info">@ViewBag.Team.Staffs.Count</span></h3>
+            <hr />
+            @if (@ViewBag.Team.Staffs == null || @ViewBag.Team.Staffs.Count == 0)
+            {
+                <div class="alert alert-info">Tým nemá žádný realizační tým.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jméno</th>
+                            <th>Příjmení</th>
+                            <th>Datum narození</th>
+                            <th>Další funkce v týmu</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var h in ViewBag.Team.Staffs)
+                        { 
+                            <tr>
+                                <td><span class="flag flag-@h.Staff.Country" alt="@h.Staff.CountryName"></span></td>
+                                <td>@h.Staff.Name</td>
+                                <td>@h.Staff.Surname</td>
+                                <td>@h.Staff.BirthDate.ToShortDateString()</td>
+                                <td>@(h.Staff.Teams.Count - 1)</td>
+                                <td><a href="/Staff/Details/@h.Staff.Id" class="btn btn-success btn-xs">Podrobnosti</a></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <h3>Aktuálně hrané soutěže <span class="label label-info">@ViewBag.Team.Competitions.Count</span></h3>
+            <hr />
+            @if (@ViewBag.Team.Competitions == null || @ViewBag.Team.Competitions.Count == 0)
+            {
+                <div class="alert alert-info">Týmu nebyly přiděleny žádné soutěže.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Název</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var h in ViewBag.Team.Competitions)
+                        { 
+                            <tr>
+                                <td>@h.Name</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <h3>Poslední zápasy</h3>
+            <hr />
+            @if (@ViewBag.LastGames == null || @ViewBag.LastGames.Count == 0)
+            {
+                <div class="alert alert-info">Tento tým dosud neodehrál žádné zápasy.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Hráno</th>
+                            <th>Soutěž</th>
+                            <th>Soupeř</th>
+                            <th>Datum</th>
+                            <th>Výsledek</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var s in ViewBag.LastGames)
+                        { 
+                            <tr>
+                                <td>@s.Place</td>
+                                <td>@s.Competition.Name</td>
+                                <td>@s.Opponent</td>
+                                <td>@String.Format("{0:d/M/yyyy HH:mm}", @s.Date)</td>
+                                @if (@s.Date <= DateTime.Now && @s.Stats.Count >= 2)
+                                {
+                                    <td>@s.Result()</td>
+                                }
+                                else
+                                {
+                                    <td>-- : --</td>
+                                }
+                                <td><a href="/Game/Details/@s.Id" class="btn btn-success btn-xs">Přejít</a></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+

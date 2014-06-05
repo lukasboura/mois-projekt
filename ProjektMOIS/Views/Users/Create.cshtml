@@ -1,0 +1,65 @@
+﻿@model ProjektMOIS.Model.User
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Users";
+    var user = User.Identity;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="/Users">Přehled uživatelů</a></li>
+                <li class="active"><a href="/Users/Create">Přidat uživatele</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Zadejte údaje o novém uživateli.</div>
+            @using (Html.BeginForm("Create", "Users", FormMethod.Post, new { role = "form", @class = "form-horizontal" }))
+            { 
+                <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label">Jméno</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "inputName", placeholder = "Jméno" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputSurname" class="col-sm-2 control-label">Příjmení</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Surname, new { @class = "form-control", id = "inputSurname", placeholder = "Příjmení" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "inputEmail", placeholder = "Email" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPass" class="col-sm-2 control-label">Heslo</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", id = "inputPass", placeholder = "Heslo", type = "password" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputRole" class="col-sm-2 control-label">Role</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Role, (IEnumerable<SelectListItem>)ViewBag.RoleItems, "-- Vyberte roli uživatele --", new { @class = "form-control", id = "inputRole" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6">
+                        <button type="submit" class="btn btn-primary">Vytvořit</button>
+                    </div>
+                </div>
+                if (!ViewData.ModelState.IsValid)
+                {
+                @Html.ValidationSummary("", new { @class = "alert alert-danger col-md-6 col-md-offset-2" })
+                }
+            }
+        </div>
+    </div>
+</div>
+
+

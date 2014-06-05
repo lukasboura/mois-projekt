@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Detail hráče";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Player/Details/@ViewBag.Player.Id">@ViewBag.Player.Name @ViewBag.Player.Surname</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a href="/Player/Edit/@ViewBag.Player.Id">Upravit</a></li>
+                }
+                <li><a href="/Player">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="media">
+                <a class="pull-left" href="#">
+                    <img class="media-object dp img-circle" src="data:image/png;base64,@System.Convert.ToBase64String(@ViewBag.Player.Photo)" style="width: 100px;height:100px;">
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading">@ViewBag.Player.Name @ViewBag.Player.Surname
+                        <span class="flag flag-@ViewBag.Player.Country"></span></td>
+                    </h4>
+                    <h5><a href="/Team/Details/@ViewBag.Player.Team.Id">@ViewBag.Player.Team.Name</a></h5>
+                    <hr style="margin: 8px auto">
+
+                    <span class="label label-default">#@ViewBag.Player.Number</span>
+                    <span class="label label-default">@ViewBag.Player.Position</span>
+                    <span class="label label-default">@ViewBag.Player.BirthDate.ToShortDateString()</span>
+                </div>
+            </div>
+            <h4>Poslední zápasy</h4>
+            <hr />
+            @if (@ViewBag.Stats == null || @ViewBag.Stats.Count == 0)
+            {
+                <div class="alert alert-info">Hráč dosud neodehrál žádné zápasy.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Hráno</th>
+                            <th>Soutěž</th>
+                            <th>Soupeř</th>
+                            <th>Datum</th>
+                            <th>Výsledek</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var s in ViewBag.Stats)
+                        { 
+                            <tr>
+                                <td>@s.Game.Place</td>
+                                <td>@s.Game.Competition.Name</td>
+                                <td>@s.Game.Opponent</td>
+                                <td>@String.Format("{0:d/M/yyyy HH:mm}", @s.Game.Date)</td>
+                                @if (@s.Game.Date <= DateTime.Now && @s.Game.Stats.Count >= 2)
+                                {
+                                    <td>@s.Game.Result()</td>
+                                }
+                                else
+                                {
+                                    <td>-- : --</td>
+                                }
+                                <td><a href="/Game/Details/@s.Game.Id" class="btn btn-success btn-xs">Přejít</a>
+                                    <button type="button"
+                                        class="btn btn-default btn-xs"
+                                        data-container="body"
+                                        data-toggle="popover"
+                                        data-placement="left"
+                                        data-content="<table class='table table-striped'><tr><td>Góly</td><td>@s.Goals</td></tr><tr><td>Asistence</td><td>@s.Assists</td></tr><tr><td>Odehrané minuty</td><td>@s.Minutes</td></tr><tr><td>Červené</td><td>@s.Red</td></tr><tr><td>Žluté karty</td><td>@s.Yellow</td></tr><tr><td>Střely celkem</td><td>@s.Shots</td></tr><tr><td>Střely mimo</td><td>@s.ShotsWide</td></tr><tr><td>Ofsajdy</td><td>@s.Offsides</td></tr><tr><td>Rohové kopy</td><td>@s.Corners</td></tr></table>">
+                                        Statistiky
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            <script>
+
+                $(function () {
+                    $("[data-toggle='popover']").popover({ html: true });
+                });
+            </script>
+            <h4>Historické statistiky</h4>
+            <hr />
+            @if (@ViewBag.History == null || @ViewBag.History.Count == 0)
+            {
+                <div class="alert alert-info">Hráč dosud neodehrál žádné zápasy.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Sezóna</th>
+                            <th class="col-md-1">G</th>
+                            <th class="col-md-1">A</th>
+                            <th class="col-md-1">M</th>
+                            <th class="col-md-1">SC</th>
+                            <th class="col-md-1">SM</th>
+                            <th class="col-md-1">Č</th>
+                            <th class="col-md-1">Ž</th>
+                            <th class="col-md-1">R</th>
+                            <th class="col-md-1">O</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var h in ViewBag.History)
+                        { 
+                            <tr>
+                                <td>@h.Season.Value</td>
+                                <td>@h.Goals</td>
+                                <td>@h.Assists</td>
+                                <td>@h.Minutes</td>
+                                <td>@h.Shots</td>
+                                <td>@h.ShotsWide</td>
+                                <td>@h.Red</td>
+                                <td>@h.Yellow</td>
+                                <td>@h.Corners</td>
+                                <td>@h.Offsides</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

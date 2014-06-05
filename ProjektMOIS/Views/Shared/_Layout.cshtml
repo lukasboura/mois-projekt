@@ -1,0 +1,58 @@
+﻿@{
+    var user = User.Identity;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    <link href="/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/flags/flags.css" rel="stylesheet" />
+    <script type="text/javascript" src="/scripts/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="/scripts/moment.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="/scripts/Chart.min.js"></script>
+
+    <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
+
+    <link href="/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+    <nav role="navigation" class="navbar navbar-inverse navbar-static-top">
+        <div class="navbar-innner">
+            <div class="container">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="/Player">Hráči</a></li>
+                    <li><a href="/Staff">Realizační tým</a></li>
+                    <li><a href="/Team">Týmy</a></li>
+                    <li><a href="/Game">Zápasy</a></li>
+                    <li><a href="/Stats">Statistiky</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ostatní <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Competition">Soutěže</a></li>
+                                <li><a href="/Season">Sezóny</a></li>
+                                <li><a href="/Users">Uživatelé</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@user.Name <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/Login/Logout">Odhlásit</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    @RenderBody()
+</body>
+</html>

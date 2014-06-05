@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Realizační tým";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Staff">Přehled</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a href="/Staff/Create">Vytvořit</a></li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @if (@ViewBag.Staffs == null || @ViewBag.Staffs.Count == 0)
+            {
+                <div class="alert alert-info">Nemáte vytvořené žádné členy realizačního týmu.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jméno</th>
+                            <th>Příjmení</th>
+                            <th>Datum narození</th>
+                            <th>Celkem funkcí</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in ViewBag.Staffs)
+                        { 
+                            <tr>
+                                <td><span class="flag flag-@s.Country"></span></td>
+                                <td>@s.Name</td>
+                                <td>@s.Surname</td>
+                                <td>@s.BirthDate.ToShortDateString()</td>
+                                <td>@s.Teams.Count</td>
+                                <td>
+                                    <a href="/Staff/Details/@s.Id" class="btn btn-success btn-xs" style="margin-right: 5px;">Podrobnosti</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a href="/Staff/Edit/@s.Id" class="btn btn-primary btn-xs">Upravit</a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+

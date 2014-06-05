@@ -1,0 +1,220 @@
+﻿@model ProjektMOIS.Model.GameViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Upravit informace o zápase";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="/Game/Details/@Model.Game.Id">Detail zápasu</a></li>
+                <li class="active"><a href="/Game/Edit/@Model.Game.Id">Upravit</a></li>
+                <li><a href="/Game">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Upravte základní informace o zápase.</div>
+            @using (Html.BeginForm("Edit", "Game", FormMethod.Post, new { role = "form", @class = "form-horizontal" }))
+            {
+                @Html.HiddenFor(m => m.Game.Team.Id)
+                @Html.HiddenFor(m => m.Game.Team.Name)
+                @Html.HiddenFor(m => m.Game.Id)
+                @Html.HiddenFor(m => m.Game.Season.Id)
+                @Html.HiddenFor(m => m.Game.Season.Value)
+                @Html.HiddenFor(m => m.Game.Competition.Id)
+                @Html.HiddenFor(m => m.Game.Competition.Name)
+                <div class="form-group">
+                    <label for="inputDatum" class="col-sm-2 control-label">Datum a čas:</label>
+                    <div class="col-sm-6">
+                        <div class="input-group date" id='datetimepicker1'>
+                            @Html.TextBoxFor(m => m.Game.Date, new { @class = "form-control", id = "inputDatum", @readonly = "readonly", data_format = "DD.MM.YYYY HH:mm" })
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker1').datetimepicker({
+                                });
+                            });
+                        </script>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputOpponent" class="col-sm-2 control-label">Soupeř:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Game.Opponent, new { @class = "form-control", id = "inputOpponent", placeholder = "Soupeř" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPlace" class="col-sm-2 control-label">Hráno: </label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Game.Place, (IEnumerable<SelectListItem>)ViewBag.PlaceItems, new { @class = "form-control", id = "inputPlace" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputReport" class="col-sm-2 control-label">Zápis o utkání:</label>
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(m => m.Game.ReportMarkdown, new { @class = "form-control", id = "inputReport", placeholder = "Vytvořte zápis o utkání...", rows = "8" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6 col-sm-6">
+                        <button type="submit" class="btn btn-success">Uložit</button>
+                    </div>
+                </div>
+                if (!ViewData.ModelState.IsValid)
+                {
+                @Html.ValidationSummary("", new { @class = "alert alert-danger col-md-6 col-md-offset-2" })
+                }
+
+            }
+            <hr />
+            <div class="alert alert-info">Upravte statistiky zápasu.</div>
+            @using (Html.BeginForm("CreateStats", "Game", new { id = @Model.Game.Id }, FormMethod.Post, new { role = "form", @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    <label for="inputOpponent" class="control-label">Přidat statistiky: </label>
+                    @Html.DropDownList("period", (IEnumerable<SelectListItem>)ViewBag.PeriodsItems, new { @class = "form-control", id = "inputOpponent", placeholder = "Soupeř" })
+                    <button type="submit" class="btn btn-primary">Přidat</button>
+                </div>
+            }
+            <hr />
+            @if (@Model.Stats.Count != 0 && @Model.Stats != null)
+            {
+                using (Html.BeginForm("UpdateStats", "Game", new { id = @Model.Game.Id }))
+                {
+                <button type="submit" class="btn btn-success">Uložit statistiky zápasu</button>
+                    for (int i = 0; i < @Model.Stats.Count; i++)
+                    {
+                    
+                @Html.Hidden("Stats.Index", i)
+                @Html.HiddenFor(m => m.Stats[i].Id)
+                @Html.HiddenFor(m => m.Stats[i].Period)
+                @Html.HiddenFor(m => m.Stats[i].Game.Id)
+                @Html.HiddenFor(m => m.Stats[i].Game.Opponent)
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2"><a href="/Game/DeleteGameStats/@Model.Stats[i].Id" class="confirmation btn btn-danger btn-xs" style="font-size:10px;"><i class="glyphicon glyphicon-remove"></i></a>&nbsp;<span class="label label-info">@Model.Stats[i].Period</span></th>
+                            <th class="col-md-1 text-center">G</th>
+                            <th class="col-md-1 text-center">DM</th>
+                            <th class="col-md-1 text-center">SC</th>
+                            <th class="col-md-1 text-center">SM</th>
+                            <th class="col-md-1 text-center">Č</th>
+                            <th class="col-md-1 text-center">Ž</th>
+                            <th class="col-md-1 text-center">R</th>
+                            <th class="col-md-1 text-center">O</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center" style="padding-top: 15px;"><strong>Domácí</strong></td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].GoalsHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].PossessionHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].ShotsHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].ShotsWideHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].RedHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].YellowHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].CornersHome, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].OffsidesHome, new { @class = "form-control" })</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center" style="padding-top: 15px;"><strong>Hosté</strong></td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].GoalsAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].PossessionAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].ShotsAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].ShotsWideAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].RedAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].YellowAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].CornersAway, new { @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(m => m.Stats[i].OffsidesAway, new { @class = "form-control" })</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                
+                    }
+
+                }
+            }
+            <div class="alert alert-info">Upravte statistiky hráčů.</div>
+            @using (Html.BeginForm("CreatePlayerStats", "Game", new { id = @Model.Game.Id }, FormMethod.Post, new { role = "form", @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    <label for="inputOpponent" class="control-label">Přidat hráče: </label>
+                    @Html.DropDownList("playerid", (IEnumerable<SelectListItem>)ViewBag.PlayersItems, new { @class = "form-control", id = "inputOpponent", placeholder = "Soupeř" })
+                    <button type="submit" class="btn btn-primary">Přidat</button>
+                </div>
+            }
+            <hr />
+            @if (@Model.PlayerStats.Count != 0 && @Model.PlayerStats != null)
+            {
+                using (Html.BeginForm("UpdatePlayerStats", "Game", new { id = @Model.Game.Id }))
+                {
+                <button type="submit" class="btn btn-success">Uložit statistiky háčů</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3"></th>
+                            <th class="col-md-1 text-center">G</th>
+                            <th class="col-md-1 text-center">A</th>
+                            <th class="col-md-1 text-center">M</th>
+                            <th class="col-md-1 text-center">SC</th>
+                            <th class="col-md-1 text-center">SM</th>
+                            <th class="col-md-1 text-center">Č</th>
+                            <th class="col-md-1 text-center">Ž</th>
+                            <th class="col-md-1 text-center">R</th>
+                            <th class="col-md-1 text-center">O</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < @Model.PlayerStats.Count; i++)
+                        {
+                    
+                            @Html.Hidden("PlayerStats.Index", i)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Id)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Game.Id)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Game.Opponent)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.Id)
+                            
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.Name)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.Surname)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.Position)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.Number)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.BirthDate)
+                            @Html.HiddenFor(m => m.PlayerStats[i].Player.Country)
+                            <tr>
+                                <td class="text-center" style="width: 150px; padding-top: 15px;">@Model.PlayerStats[i].Player.Name @Model.PlayerStats[i].Player.Surname</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Goals, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Assists, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Minutes, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Shots, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].ShotsWide, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Red, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Yellow, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Corners, new { @class = "form-control" })</td>
+                                <td>@Html.TextBoxFor(m => m.PlayerStats[i].Offsides, new { @class = "form-control" })</td>
+                                <td style="padding-top: 13px;"><a href="/Game/DeletePlayerStats/@Model.PlayerStats[i].Id" class="confirmation btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></a></td>
+                            </tr>                            
+                        }
+                    </tbody>
+                </table>
+                
+
+                }
+            }
+            <script type="text/javascript">
+                var elems = document.getElementsByClassName('confirmation');
+                var confirmIt = function (e) {
+                    if (!confirm('Opravdu chcete smazat tato data?')) e.preventDefault();
+                };
+                for (var i = 0, l = elems.length; i < l; i++) {
+                    elems[i].addEventListener('click', confirmIt, false);
+                }
+            </script>
+        </div>
+    </div>
+</div>

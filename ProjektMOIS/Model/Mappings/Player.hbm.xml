@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ProjektMOIS"
+                   namespace="ProjektMOIS.Model">
+
+  <class name="Player" table="player">
+    <id name="Id">
+      <generator class="native"></generator>
+    </id>
+    <property name="Name" />
+    <property name="Surname" />
+    <property name="Number" />
+    <property name="Position" />
+    <property name="BirthDate" />
+    <property name="Photo" />
+    <property name="Country" />
+    <property name="Active" />
+    <many-to-one name="Team" column="Team" class="ProjektMOIS.Model.Team" lazy="false"/>
+  </class>
+
+</hibernate-mapping>

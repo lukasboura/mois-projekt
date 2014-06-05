@@ -1,0 +1,163 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Detail zápasu";
+    
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Game/Details/@ViewBag.Game.Id">Detail zápasu</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a href="/Game/Edit/@ViewBag.Game.Id">Upravit</a></li>
+                }
+                <li><a href="/Game">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="jumbotron jumbotron-small">
+                <h3 class="text-center">@ViewBag.Game.Title()</h3>
+                @if (@ViewBag.Game.Date <= DateTime.Now && @ViewBag.Game.Stats.Count >= 2)
+                {
+                    <p class="text-center lead text-muted" style="margin-bottom: 10px; font-size: 26px !important">@ViewBag.Game.Result()</p>
+                }
+                else
+                {
+                    <p class="text-center lead text-muted" style="margin-bottom: 10px; font-size: 26px !important">-- : --</p>
+                }
+                <p class="text-center" style="font-size: 16px !important">
+                    <span class="label label-primary">@String.Format("{0:d/M/yyyy HH:mm}", @ViewBag.Game.Date)</span>
+                    <span class="label label-primary">@ViewBag.Game.Season.Value</span>
+                    <span class="label label-primary">@ViewBag.Game.Competition.Name</span>
+                </p>
+
+            </div>
+
+            <h3>Statistiky</h3>
+            <hr />
+            @if (@ViewBag.Game.Date > DateTime.Now)
+            {
+                <div class="alert alert-info">Zápas ještě nebyl odehrán.</div>   
+            }
+            else
+            {
+                if (@ViewBag.Game.Stats.Count >= 2)
+                {
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.GoalsHome() }, 
+        { "away", @ViewBag.Game.GoalsAway() }, 
+        { "title", "Góly" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.PossessionHome() }, 
+        { "away", @ViewBag.Game.PossessionAway() }, 
+        { "title", "Držení míče" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.ShotsHome() }, 
+        { "away", @ViewBag.Game.ShotsAway() }, 
+        { "title", "Střely celkem" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.ShotsWideHome() }, 
+        { "away", @ViewBag.Game.ShotsWideAway() }, 
+        { "title", "Střely mimo" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.RedHome() }, 
+        { "away", @ViewBag.Game.RedAway() }, 
+        { "title", "Červené karty" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.YellowHome() }, 
+        { "away", @ViewBag.Game.YellowAway() }, 
+        { "title", "Žluté karty" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.CornersHome() }, 
+        { "away", @ViewBag.Game.CornersAway() }, 
+        { "title", "Rohy" }
+    })    
+                @Html.Partial("_GameStatsPartial", new ViewDataDictionary { 
+        { "home", @ViewBag.Game.OffsidesHome() }, 
+        { "away", @ViewBag.Game.OffsidesAway() }, 
+        { "title", "Ofsajdy" }
+    })           
+
+                }
+                else
+                {
+                <div class="alert alert-info">Dosud nebyl vytvořen zápis o utkání.</div>
+                }
+            }
+            <h3>Zápis o utkání</h3>
+            <hr />
+            @if (@ViewBag.Game.Report != null && @ViewBag.Game.Report.Length > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>@Html.Raw(@ViewBag.Game.Report)</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">Zápis o utkání nebyl dosud vytvořen.</div>  
+            }
+            <h3>Statistiky - hráči</h3>
+            <hr />
+            @if (@ViewBag.Game.Date > DateTime.Now)
+            {
+                <div class="alert alert-info">Zápas ještě nebyl odehrán.</div>   
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-md-4"></th>
+                            <th class="col-md-1">G</th>
+                            <th class="col-md-1">A</th>
+                            <th class="col-md-1">M</th>
+                            <th class="col-md-1">SC</th>
+                            <th class="col-md-1">SM</th>
+                            <th class="col-md-1">Č</th>
+                            <th class="col-md-1">Ž</th>
+                            <th class="col-md-1">R</th>
+                            <th class="col-md-1">O</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var ps in @ViewBag.Game.PlayerStats)
+                        {
+                            <tr>
+                                <td>@ps.Player.Name @ps.Player.Surname</td>
+                                <td>@ps.Goals</td>
+                                <td>@ps.Assists</td>
+                                <td>@ps.Minutes</td>
+                                <td>@ps.Shots</td>
+                                <td>@ps.ShotsWide</td>
+                                <td>@ps.Red</td>
+                                <td>@ps.Yellow</td>
+                                <td>@ps.Corners</td>
+                                <td>@ps.Offsides</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                        if (@ViewBag.Game.PlayerStats.Count > 0)
+                        {
+
+
+                        }
+                        else
+                        {
+                <div class="alert alert-info">Dosud nebyly přidány statistiky o žádném hráči.</div>
+                        }
+            }
+        </div>
+    </div>
+</div>

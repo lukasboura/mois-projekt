@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sezóny";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Season">Přehled sezón</a></li>
+                <li><a href="/Season/Create">Přidat</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Přehled sezón v databázy.</div>
+            @if (@ViewBag.Seasons == null || @ViewBag.Seasons.Count == 0)
+            {
+                <div class="alert alert-info">Dosud nebyly přidány žádné sezóny.</div>
+            }
+            else
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sezóna</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in @ViewBag.Seasons)
+                        {
+                            <tr>
+                                <td>@s.Value</td>
+                                <td><a href="/Season/Edit/@s.Id" class="btn btn-primary btn-xs">Upravit</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+

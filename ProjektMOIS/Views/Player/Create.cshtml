@@ -1,0 +1,87 @@
+﻿@model ProjektMOIS.Model.ViewModels.PlayerViewModel
+
+@{
+    ViewBag.Title = "Vytvořit hráče";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Player/Create">Nový hráč</a></li>
+                <li><a href="/Player">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Vytvořte profil nového hráče.</div>
+            @using (Html.BeginForm("Create", "Player", FormMethod.Post, new { role = "form", @class = "form-horizontal" }))
+            { 
+                <div class="form-group">
+                    <label for="inputJmeno" class="col-sm-2 control-label">Jméno</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "inputJmeno", placeholder = "Jméno" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPrijmeni" class="col-sm-2 control-label">Příjmení</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Surname, new { @class = "form-control", id = "inputPrijmeni", placeholder = "Příjmení" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCountry" class="col-sm-2 control-label">Národnost</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Vyberte národnost --", new { @class = "form-control", id = "inputCountry" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDatum" class="col-sm-2 control-label">Datum narození:</label>
+                    <div class="col-sm-6">
+                        <div class="input-group date" id='datetimepicker1'>
+                            @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control", id = "inputDatum", @readonly = "readonly", data_format = "DD.MM.YYYY" })
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker1').datetimepicker({
+                                    pickTime: false
+                                });
+                            });
+                        </script>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCislo" class="col-sm-2 control-label">Číslo dresu</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Number, new { @class = "form-control", id = "inputCislo", type = "number", placeholder = "Číslo dresu" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPost" class="col-sm-2 control-label">Post</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Position, (IEnumerable<SelectListItem>)ViewBag.PositionItems, "-- Vyberte post --", new { @class = "form-control", id = "inputPost" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTym" class="col-sm-2 control-label">Tým</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Team, (IEnumerable<SelectListItem>)ViewBag.TeamItems, "-- Vyberte tým --", new { @class = "form-control", id = "inputTym" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6">
+                        <button type="submit" class="btn btn-primary">Vytvořit</button>
+                    </div>
+                </div>
+                if (!ViewData.ModelState.IsValid)
+                {
+                    @Html.ValidationSummary("", new { @class = "alert alert-danger col-md-6 col-md-offset-2" })
+                }
+            }
+
+        </div>
+    </div>
+</div>

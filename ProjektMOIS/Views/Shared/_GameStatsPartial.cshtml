@@ -1,0 +1,36 @@
+﻿@{
+    int home = Convert.ToInt32(ViewData["home"]);
+    int away = Convert.ToInt32(ViewData["away"]);
+    string title = Convert.ToString(ViewData["title"]);
+}
+
+<div class="row">
+        <div class="col-md-1 text-center"><strong>@home</strong></div>
+        <div class="col-md-4">
+            <div class="progress">
+                @if (((double)home / (home + away) * 100) >= 50)
+                {
+                    <div class="progress-bar progress-bar-success pull-right" style="width: @(((double)home / (home + away) * 100).ToString().Replace(",", "."))%;"></div>
+                }
+                else
+                {
+                    <div class="progress-bar progress-bar-danger pull-right" style="width: @(((double)home / (home + away) * 100).ToString().Replace(",", "."))%;"></div>
+                }
+            </div>
+        </div>
+        <div class="col-md-2 text-center"><strong>@title</strong></div>
+        <div class="col-md-4">
+            <div class="progress">
+                @if (((double)away / (home + away) * 100) >= 50)
+                {
+                    <div class="progress-bar progress-bar-success" style="width: @(((double)away / (home + away) * 100).ToString().Replace(",", "."))%;"></div>
+                }
+                else
+                {
+                    <div class="progress-bar progress-bar-danger" style="width: @(((double)away / (home + away) * 100).ToString().Replace(",", "."))%;"></div>
+                }
+
+            </div>
+        </div>
+        <div class="col-md-1 text-center"><strong>@away</strong></div>
+    </div>

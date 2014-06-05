@@ -1,0 +1,184 @@
+﻿@model ProjektMOIS.Model.GameFilterViewModel
+@{
+    ViewBag.Title = "Statistiky týmů";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var zapasy = @ViewBag.Stats[0].Value;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Stats">Statistiky týmů</a></li>
+                <li><a href="/Stats/Player">Statistiky hráčů</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @using (Html.BeginForm("Index", "Stats", FormMethod.Get, new { role = "form", @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    <label for="inputTeam" class="control-label">Tým: </label>
+                    @Html.DropDownListFor(model => model.Team, (IEnumerable<SelectListItem>)ViewBag.TeamItems, new { @class = "form-control", id = "inputTym", onchange = "this.form.submit();" })
+                </div>
+                <div class="form-group">
+                    <label for="inputSeason" class="control-label">Sezóna: </label>
+                    @Html.DropDownListFor(model => model.Season, (IEnumerable<SelectListItem>)ViewBag.SeasonItems, new { @class = "form-control", id = "inputSeason", onchange = "this.form.submit();" })
+                </div>
+                <div class="form-group">
+                    <label for="inputC" class="control-label">Soutěž: </label>
+                    @Html.DropDownListFor(model => model.Competition, (IEnumerable<SelectListItem>)ViewBag.CompetitionItems, new { @class = "form-control", id = "inputC", onchange = "this.form.submit();" })
+                </div>
+            }
+            <hr>
+            <h3>Přehled <small>průměrné hodnoty</small></h3>
+            @if (@ViewBag.Results == null || (@ViewBag.Results["Výhry"].Value == 0 && @ViewBag.Results["Prohry"].Value == 0 && @ViewBag.Results["Remízy"].Value == 0))
+            {
+                <div class="alert alert-info">K dispozici nejsou žádná data.</div>
+            } else 
+            {
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[0].Value</span>
+                        <span class="key"><strong>@ViewBag.Stats[0].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@(Math.Round((double)ViewBag.Stats[1].Value / zapasy, 2))</span>
+                        <span class="key"><strong>@ViewBag.Stats[1].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@(Math.Round((double)ViewBag.Stats[2].Value / zapasy, 2))</span>
+                        <span class="key"><strong>@ViewBag.Stats[2].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[3].Value%</span>
+                        <span class="key"><strong>@ViewBag.Stats[3].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[4].Value</span>
+                        <span class="key"><strong>@ViewBag.Stats[4].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[5].Value</span>
+                        <span class="key"><strong>@ViewBag.Stats[5].Key</strong></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="value">@(Math.Round((double)ViewBag.Stats[1].Value / ViewBag.Stats[4].Value * 100, 2))%</span>
+                        <span class="key"><strong>Úspěšnost střelby</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@(Math.Round((double)ViewBag.Stats[5].Value / ViewBag.Stats[4].Value * 100, 2))%</span>
+                        <span class="key"><strong>Přesnost střelby</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@(Math.Round((double)ViewBag.Stats[6].Value / zapasy, 2))</span>
+                        <span class="key"><strong>@ViewBag.Stats[6].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[7].Value</span>
+                        <span class="key"><strong>@ViewBag.Stats[7].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[8].Value</span>
+                        <span class="key"><strong>@ViewBag.Stats[8].Key</strong></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="value">@ViewBag.Stats[9].Value</span>
+                        <span class="key"><strong>@ViewBag.Stats[9].Key</strong></span>
+                    </div>
+                </div>
+            }
+            <hr>
+            <h3>Podrobné statistiky</h3>
+            @if (@ViewBag.Results == null || (@ViewBag.Results["Výhry"].Value == 0 && @ViewBag.Results["Prohry"].Value == 0 && @ViewBag.Results["Remízy"].Value == 0))
+            {
+                <div class="alert alert-info">K dispozici nejsou žádná data.</div>
+            }
+            else
+            {
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <h4>Výsledky</h4>
+                        <canvas id="myChart" width="200" height="200"></canvas>
+                        <table class="table">
+                            @foreach (var item in ViewBag.Results)
+                            { 
+                                <tr>
+                                    <td class="col-md-1" style="background-color: @item.Value.Color"></td>
+                                    <td class="col-md-9">@item.Key</td>
+                                    <td class="col-md-2">@item.Value.Value</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Góly - hráči</h4>
+                        <canvas id="myChart1" width="200" height="200"></canvas>
+                        <table class="table">
+                            @foreach (var item in ViewBag.ResultsShooters)
+                            { 
+                                <tr>
+                                    <td class="col-md-1" style="background-color: @item.Value.Color"></td>
+                                    <td class="col-md-9">@item.Key</td>
+                                    <td class="col-md-2">@item.Value.Value</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Góly - tým</h4>
+                        <canvas id="myChart2" width="200" height="200"></canvas>
+                        <table class="table">
+                            @foreach (var item in ViewBag.ResultsGoals)
+                            { 
+                                <tr>
+                                    <td class="col-md-1" style="background-color: @item.Value.Color"></td>
+                                    <td class="col-md-9">@item.Key</td>
+                                    <td class="col-md-2">@item.Value.Value</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+
+                </div>
+
+                <script>
+                    var ctx = document.getElementById("myChart").getContext("2d");
+                    var ctx1 = document.getElementById("myChart1").getContext("2d");
+                    var ctx2 = document.getElementById("myChart2").getContext("2d");
+                    var data = [];
+                    var data1 = [];
+                    var data2 = [];
+                @foreach (var item in ViewBag.Results)
+                {
+                    <text>
+                    data.push({ value: @item.Value.Value, color: "@item.Value.Color" });
+                    </text>
+                }
+                @foreach (var item in ViewBag.ResultsShooters)
+                {
+                    <text>
+                    data1.push({ value: @item.Value.Value, color: "@item.Value.Color" });
+                    </text>
+                }
+                @foreach (var item in ViewBag.ResultsGoals)
+                {
+                    <text>
+                    data2.push({ value: @item.Value.Value, color: "@item.Value.Color" });
+                </text>
+                }
+                    var settings = {
+                        animation: false
+                    };
+                    new Chart(ctx).Pie(data, settings);
+                    new Chart(ctx1).Pie(data1, settings);
+                    new Chart(ctx2).Pie(data2, settings);
+                </script>}
+        </div>
+    </div>
+</div>
+
+
+

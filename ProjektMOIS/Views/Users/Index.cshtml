@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Users";
+    var user = User.Identity;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Users">Přehled uživatelů</a></li>
+                <li><a href="/Users/Create">Přidat uživatele</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @if (@TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"] </div>
+            }
+            <table class="table table-hover">
+                <tr>
+                    <th>Jméno</th>
+                    <th>Příjmení</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+                @foreach (var u in ViewBag.Users)
+                { 
+                    <tr>
+                        <td>@u.Name</td>
+                        <td>@u.Surname</td>
+                        <td>@u.Email</td>
+                        <td>@u.Role</td>
+                        <td><a href="Users/Edit/@u.Id" class="btn btn-primary btn-xs" style="margin-right:5px;">Upravit</a><a href="Users/Delete/@u.Id" class="btn btn-danger btn-xs">Smazat</a></td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+

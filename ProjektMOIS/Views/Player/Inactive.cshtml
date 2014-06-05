@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Hráči";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                @foreach (var team in ViewBag.Teams)
+                {
+                    <li><a href="/Player/Team/@team.Id">@team.Name</a></li>
+                }
+                <li class="active"><a href="/Player/Inactive">Bývalí hráči</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @if (@ViewBag.Players == null || @ViewBag.Players.Count == 0)
+            {
+                <div class="alert alert-info">V týmu nejsou žádní hráči.</div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jméno</th>
+                            <th>Příjmení</th>
+                            <th>Post</th>
+                            <th>Datum narození</th>
+                            <th>Číslo dresu</th>
+                            <th></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var h in ViewBag.Players)
+                        { 
+                            <tr>
+                                <td>
+                                    <span class="flag flag-@h.Country"></span>
+                                </td>
+                                <td>@h.Name</td>
+                                <td>@h.Surname</td>
+                                <td>@h.Position</td>
+                                <td>@h.BirthDate.ToShortDateString()</td>
+                                <td>@h.Number</td>
+                                <td><a href="/Player/Details/@h.Id" class="btn btn-success btn-xs" style="margin-right: 5px;">Podrobnosti</a><a href="/Player/Edit/@h.Id" class="btn btn-primary btn-xs">Upravit</a></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</div>

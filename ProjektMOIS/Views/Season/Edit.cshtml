@@ -1,0 +1,35 @@
+﻿@model ProjektMOIS.Model.Season
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sezóny - upravit";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="/Season">Zpět</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Upravte formát sezóny <b>@Model.Value</b>.</div>
+            @using (Html.BeginForm("Edit", "Season", FormMethod.Post, new { role = "form", @class = "form-horizontal" }))
+            { 
+                <div class="form-group">
+                    <label for="inputValue" class="col-sm-2 control-label">Ročník</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Value, new { @class = "form-control", id = "inputValue", placeholder = "Ročník" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6">
+                        <button type="submit" class="btn btn-primary">OK</button>
+                    </div>
+                </div>
+                @Html.ValidationSummary()
+            }
+        </div>
+    </div>
+</div>
+
+

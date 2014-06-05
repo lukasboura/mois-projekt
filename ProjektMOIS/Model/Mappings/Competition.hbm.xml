@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ProjektMOIS"
+                   namespace="ProjektMOIS.Model">
+
+  <class name="Competition" table="competition">
+    <id name="Id">
+      <generator class="native"></generator>
+    </id>
+    <property name="Name" />
+    <many-to-one name="Team" class="ProjektMOIS.Model.Team" column="Team" lazy="false"/>
+  </class>
+
+</hibernate-mapping>

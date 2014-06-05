@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Soutěže";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/Competition">Přehled soutěží</a></li>
+                <li><a href="/Competition/Create">Přidat</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-info">Přehled vytvořených soutěží a jejich týmů.</div>
+            @if (@ViewBag.Competitions == null || @ViewBag.Competitions.Count == 0)
+            {
+                <div class="alert alert-info">Dosud nebyly vytvořeny žádné soutěže.</div>
+            }
+            else
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Soutěž</th>
+                            <th>Tým</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in @ViewBag.Competitions)
+                        {
+                            <tr>
+                                <td>@c.Name</td>
+
+                                @if (c.Team == null || c.Team.Id == 0)
+                                {
+                                    <td>Tým nepřiřazen</td>
+                                }
+                                else
+                                { 
+                                    <td>@c.Team.Name</td>
+                                }
+                                <td><a href="/Competition/Edit/@c.Id" class="btn btn-primary btn-xs">Změnit</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+

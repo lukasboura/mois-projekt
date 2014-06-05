@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ProjektMOIS"
+                   namespace="ProjektMOIS.Model">
+
+  <class name="Team" table="team">
+    <id name="Id">
+      <generator class="native"></generator>
+    </id>
+    <property name="Name"/>
+    <set name="Staffs"
+         cascade="all-delete-orphan"
+         inverse="true"
+         lazy="false">
+      <key column="Team"></key>
+      <one-to-many class="TeamStaff"/>
+    </set>
+    <set name="Players"
+         cascade="all-delete-orphan"
+         inverse="true"
+         lazy="false">
+      <key column="Team"></key>
+      <one-to-many class="Player"/>
+    </set>
+    <set name="Competitions"
+         cascade="all-delete-orphan"
+         inverse="true"
+         lazy="false">
+      <key column="Team"></key>
+      <one-to-many class="Competition"/>
+    </set>
+  </class>
+
+</hibernate-mapping>

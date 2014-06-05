@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ProjektMOIS"
+                   namespace="ProjektMOIS.Model">
+
+  <class name="GameStats" table="gamestats">
+    <id name="Id">
+      <generator class="native"></generator>
+    </id>
+    <property name="Period" />
+    <property name="GoalsHome" />
+    <property name="GoalsAway" />
+    <property name="PossessionHome" />
+    <property name="PossessionAway" />
+    <property name="RedHome" />
+    <property name="RedAway" />
+    <property name="YellowHome" />
+    <property name="YellowAway" />
+    <property name="CornersHome" />
+    <property name="CornersAway" />
+    <property name="ShotsHome" />
+    <property name="ShotsAway" />
+    <property name="ShotsWideHome" />
+    <property name="ShotsWideAway" />
+    <property name="OffsidesHome" />
+    <property name="OffsidesAway" />
+    <many-to-one name="Game" column="Game" class="ProjektMOIS.Model.Game" lazy="false"/>
+  </class>
+
+</hibernate-mapping>
